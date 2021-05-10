@@ -3,57 +3,5 @@
   hosts: all
   become: yes
 
-
-  vars:
-    source_folder: ./WebSite
-    dest_folder: /var/www/html/
-
-
-  tasks:
-  - name: Ping Servers
-    ping:
-
-
-  - name: Check Linux version
-    debug:
-      var: ansible_os_family
-
-
-  - block:  # Block for Debian
-
-    - name: install Apache for Debian
-      apt: name=apache2 state=latest
-
-    - name: start apache service on Debian
-      service: name=apache2 state=started enabled=yes
-     
-    when: ansible_os_family == "Debian"
-
-
-  - block: # Block for RedHat
-
-    - name: install Apache for RedHat
-      yum: name=httpd state=latest
-      when: ansible_os_family == "RedHat"
- 
-    - name: start apache service on RedHat
-      service: name=httpd state=started enabled=yes
-    when: ansible_os_family == "RedHat"
-
-
-  - name: Copy index.html on Servest
-    copy: src={{ item }} dest={{ dest_folder }}
-    with_fileglob: "{{ source_folder }}/*.*"
-    notify:
-     -  Restart apache Debian
-     -  Restart apache RedHat
-
-  handlers:
-  - name: Restart apache Debian
-    service: name=apache2 state=restarted
-    when: ansible_os_family == "Debian"
-
-  - name: Restart apache RedHat
-    service: name=httpd state=restarted
-    when: ansible_os_family == "RedHat"
-
+  roles:
+  - install_apache

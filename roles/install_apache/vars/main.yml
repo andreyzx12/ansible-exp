@@ -1,0 +1,5 @@
+---
+# vars file for install_apache
+
+dest_folder: /var/www/html/
+

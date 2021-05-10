@@ -1,0 +1,45 @@
+---
+# tasks file for install_apache
+
+
+  - name: Ping Servers
+    ping:
+
+
+  - name: Check Linux version
+    debug:
+      var: ansible_os_family
+
+
+  - block:  # Block for Debian
+
+    - name: install Apache for Debian
+      apt: name=apache2 state=latest
+
+    - name: start apache service on Debian
+      service: name=apache2 state=started enabled=yes
+
+    when: ansible_os_family == "Debian"
+
+
+  - block: # Block for RedHat
+
+    - name: install Apache for RedHat
+      yum: name=httpd state=latest
+      when: ansible_os_family == "RedHat"
+
+    - name: start apache service on RedHat
+      service: name=httpd state=started enabled=yes
+      when: ansible_os_family == "RedHat"
+
+
+  - name: Template for index.j2
+    template: src=index.j2 dest={{ dest_folder }}/index.html
+
+  - name: Copy index.html on Servest
+    copy: src={{ item }} dest={{ dest_folder }}
+    with_fileglob: "*.*"
+    notify:
+     -  Restart apache Debian
+     -  Restart apache RedHat
+
