@@ -1,0 +1,4 @@
+---
+ansible_user : zimenkov2
+ansible_ssh_private_key_file : /home/zimenkov/.ssh/ubuntu3
+

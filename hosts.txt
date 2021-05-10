@@ -1,0 +1,9 @@
+
+
+[test]
+ubuntu-client ansible_host=104.197.46.219
+centOS-client ansible_host=35.192.116.162
+
+
+[test2]
+ubuntu-prod ansible_host=146.148.100.61
